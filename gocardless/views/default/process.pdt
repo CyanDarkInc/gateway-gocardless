@@ -1,4 +1,5 @@
 <?php
+
 // Build payment button
 $this->Form->create(null, ['class' => 'pull-right']);
 $this->Form->fieldHidden('pay_type', 'onetime');
@@ -12,4 +13,3 @@ if ($recurring) {
     $this->Form->fieldButton('submit', $this->_('Gocardless.buildprocess.subscription', true), ['class' => 'btn btn-default', 'type' => 'submit']);
     $this->Form->end();
 }
-?>

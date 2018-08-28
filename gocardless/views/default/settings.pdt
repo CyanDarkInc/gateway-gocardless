@@ -30,14 +30,14 @@
             $this->Form->fieldCheckbox('dev_mode', 'true', ($this->Html->ifSet($meta['dev_mode'], 'false') == 'true'), ['id'=>'dev_mode']);
             $this->Form->label($this->_('Gocardless.dev_mode', true), 'dev_mode', ['class'=>'inline']);
         ?>
-        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Gocardless.dev_mode_note');?></div></span>
+        <span class="tooltip"><?php $this->_('AppController.tooltip.text'); ?><div><?php $this->_('Gocardless.dev_mode_note'); ?></div></span>
     </li>
 </ul>
 
 <div class="title_row">
-    <h3><?php $this->_('Gocardless.webhook');?></h3>
+    <h3><?php $this->_('Gocardless.webhook'); ?></h3>
 </div>
 <div class="pad">
-    <p><?php $this->_('Gocardless.webhook_note');?></p>
+    <p><?php $this->_('Gocardless.webhook_note'); ?></p>
     <code><?php echo Configure::get('Blesta.gw_callback_url') . Configure::get('Blesta.company_id') . '/gocardless/'; ?></code>
 </div>
