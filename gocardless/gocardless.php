@@ -68,7 +68,7 @@ class Gocardless extends NonmerchantGateway
     }
 
     /**
-     * Return all currencies supported by this gateway
+     * Return all currencies supported by this gateway.
      *
      * @return array A numerically indexed array containing all currency codes (ISO 4217 format) this gateway supports
      */
@@ -245,7 +245,7 @@ class Gocardless extends NonmerchantGateway
         if (
             $this->ifSet($options['recur']) &&
             $this->ifSet($options['recur']['amount']) > 0 &&
-            $this->ifSet($options['recur']['amount']) == $amount  &&
+            $this->ifSet($options['recur']['amount']) == $amount &&
             $this->ifSet($options['recur']['period']) !== 'day'
         ) {
             $recurring = true;
@@ -256,7 +256,7 @@ class Gocardless extends NonmerchantGateway
 
         if ($this->ifSet($_GET['pay_type'], $_POST['pay_type']) == 'subscribe') {
             $pay_type = 'subscribe';
-        } else if ($this->ifSet($_GET['pay_type'], $_POST['pay_type']) == 'onetime') {
+        } elseif ($this->ifSet($_GET['pay_type'], $_POST['pay_type']) == 'onetime') {
             $pay_type = 'onetime';
         }
 
@@ -317,7 +317,7 @@ class Gocardless extends NonmerchantGateway
 
                     if ($interval_unit == 'yearly') {
                         $params['month'] = strtolower(date('F'));
-                    }                  
+                    }
 
                     $this->log($this->ifSet($_SERVER['REQUEST_URI']), serialize($params), 'input', true);
                     $subscription = $api->subscriptions()->create($params);
@@ -330,7 +330,7 @@ class Gocardless extends NonmerchantGateway
                         'subscription_id' => $this->ifSet($subscription->api_response->body->subscriptions->id)
                     ]);
                     $this->redirectToUrl($return_url);
-                } else if ($pay_type == 'onetime') {
+                } elseif ($pay_type == 'onetime') {
                     // Create one time payment
                     $params = [
                         'params' => [
@@ -362,7 +362,7 @@ class Gocardless extends NonmerchantGateway
                     ['internal' => ['response' => $e->getMessage()]]
                 );
             }
-        } else if (!empty($pay_type)) {
+        } elseif (!empty($pay_type)) {
             // Build successful redirect url for the redirect flow
             $redirect_url = $this->generateReturnUrl(null, [
                 'pay_type' => $pay_type
@@ -372,7 +372,7 @@ class Gocardless extends NonmerchantGateway
             $this->Session->clear('gocardless_token');
             $session_token = 'SESS_' . base64_encode(md5(uniqid() . $this->ifSet($contact_info['client_id'])));
             $this->Session->write('gocardless_token', $session_token);
-            
+
             // Create a new redirect flow
             try {
                 $params = [
@@ -399,7 +399,7 @@ class Gocardless extends NonmerchantGateway
 
                 // Log the API response
                 $this->log($this->ifSet($_SERVER['REQUEST_URI']), serialize($redirect_flow), 'output', $this->getResponseStatus($redirect_flow));
-            
+
                 // Redirect to the authorization page
                 $this->redirectToUrl($this->ifSet($redirect_flow->redirect_url));
             } catch (\GoCardlessPro\Core\Exception\ApiException $e) {
@@ -477,7 +477,7 @@ class Gocardless extends NonmerchantGateway
                     $event_fields[$resource . '_status'] = $event->details['cause'];
                 }
             }
-        } catch(\GoCardlessPro\Core\Exception\InvalidSignatureException $e) {
+        } catch (\GoCardlessPro\Core\Exception\InvalidSignatureException $e) {
             $this->Input->setErrors(
                 ['internal' => ['response' => $e->getMessage()]]
             );
@@ -495,7 +495,7 @@ class Gocardless extends NonmerchantGateway
             }
 
             // Check if the payment it's associated to an active suscription
-            if (isset($payment_details->links->subscription)){
+            if (isset($payment_details->links->subscription)) {
                 $subscription = $api->subscriptions()->get($payment_details->links->subscription);
                 $subscription_details = $subscription->api_response->body->subscriptions;
             }
@@ -617,11 +617,11 @@ class Gocardless extends NonmerchantGateway
         $this->log($this->ifSet($_SERVER['REQUEST_URI']), serialize($get), 'input', true);
 
         try {
-            if ($pay_type == 'subscribe') {                
+            if ($pay_type == 'subscribe') {
                 $payment = $api->subscriptions()->get($this->ifSet($get['subscription_id']));
                 $payment_details = $payment->api_response->body->subscriptions;
                 $payment_details->id = null;
-            } else if ($pay_type == 'onetime') {
+            } elseif ($pay_type == 'onetime') {
                 $payment = $api->payments()->get($this->ifSet($get['payment_id']));
                 $payment_details = $payment->api_response->body->payments;
             }
@@ -696,7 +696,7 @@ class Gocardless extends NonmerchantGateway
             $this->log($this->ifSet($_SERVER['REQUEST_URI']), serialize($payment_details), 'output', $this->getResponseStatus($payment));
 
             // Check if the payment it's associated to an active suscription
-            if (isset($payment_details->links->subscription)){
+            if (isset($payment_details->links->subscription)) {
                 $subscription = $api->subscriptions()->get($payment_details->links->subscription);
                 $subscription_details = $subscription->api_response->body->subscriptions;
             }
@@ -762,6 +762,7 @@ class Gocardless extends NonmerchantGateway
 
                 if (!$this->getResponseStatus($refund)) {
                     $this->Input->setErrors($this->getCommonError('general'));
+
                     return;
                 }
 
@@ -833,7 +834,7 @@ class Gocardless extends NonmerchantGateway
      * @param string $dev_mode Post transactions to the GoCardless Sandbox environment
      * @return GoCardlessPro A GoCardlessPro instance
      */
-    private function getApi($access_token, $dev_mode = "false")
+    private function getApi($access_token, $dev_mode = 'false')
     {
         // Load the Guzzle autoloader
         Loader::load(dirname(__FILE__) . DS . 'lib' . DS . 'guzzle' . DS . 'autoloader.php');
@@ -841,9 +842,9 @@ class Gocardless extends NonmerchantGateway
         // Load the GoCardless API
         Loader::load(dirname(__FILE__) . DS . 'lib' . DS . 'gocardless' . DS . 'lib' . DS . 'loader.php');
 
-        if ($dev_mode == "true") {
+        if ($dev_mode == 'true') {
             $environment = \GoCardlessPro\Environment::SANDBOX;
-        } else if ($dev_mode == "false") {
+        } elseif ($dev_mode == 'false') {
             $environment = \GoCardlessPro\Environment::LIVE;
         }
 
