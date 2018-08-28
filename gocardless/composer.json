@@ -1,0 +1,9 @@
+{
+    "name": "blesta/gocardless",
+    "description": "GoCardless",
+    "license": "proprietary",
+    "type": "blesta-gateway-nonmerchant",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}
