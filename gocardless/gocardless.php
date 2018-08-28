@@ -494,7 +494,7 @@ class Gocardless extends NonmerchantGateway
                 $payment_details = $payment->api_response->body->payments;
             }
 
-            // Check if the payment it's associated to an active suscription
+            // Check if the payment it's associated to an active subscription
             if (isset($payment_details->links->subscription)) {
                 $subscription = $api->subscriptions()->get($payment_details->links->subscription);
                 $subscription_details = $subscription->api_response->body->subscriptions;
@@ -695,7 +695,7 @@ class Gocardless extends NonmerchantGateway
             // Log the API response
             $this->log($this->ifSet($_SERVER['REQUEST_URI']), serialize($payment_details), 'output', $this->getResponseStatus($payment));
 
-            // Check if the payment it's associated to an active suscription
+            // Check if the payment it's associated to an active subscription
             if (isset($payment_details->links->subscription)) {
                 $subscription = $api->subscriptions()->get($payment_details->links->subscription);
                 $subscription_details = $subscription->api_response->body->subscriptions;
@@ -704,7 +704,7 @@ class Gocardless extends NonmerchantGateway
             // Log the API response
             $this->log($this->ifSet($_SERVER['REQUEST_URI']), serialize($subscription_details), 'output', $this->getResponseStatus($subscription));
 
-            // Cancel active suscription
+            // Cancel active subscription
             if (isset($subscription_details->id)) {
                 $cancel = $api->subscriptions()->cancel($subscription_details->id);
             }
